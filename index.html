@@ -100,7 +100,6 @@
         </div>
     </header>
     <main id="main-content">
-        <!-- Buraya ESP32'den alınan verilerin gösterileceği HTML kodları eklenecek -->
         <section class="plant-info">
             <h2>Bitki Bilgileri</h2>
             <p>Bitki Adı: <span id="plant-name">---</span></p>
@@ -118,7 +117,7 @@
     <footer>© 2024 Bitki İzleme Web Sitesi</footer>
     <script>
         function updateSensorData() {
-            fetch('/sensorData')
+            fetch('https://yusuframazan.github.io/test/sensorData.json')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById("plant-name").textContent = data.plantName;
@@ -126,6 +125,9 @@
                     document.getElementById("temperature").textContent = data.temperature + "°C";
                     document.getElementById("light-intensity").textContent = data.lightIntensity;
                     updateChart(data.soilMoisture, data.temperature, data.lightIntensity);
+                })
+                .catch(error => {
+                    console.error('Veri alınırken bir hata oluştu:', error);
                 });
         }
 
