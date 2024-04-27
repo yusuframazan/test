@@ -117,7 +117,49 @@
     </main>
     <footer>© 2024 Bitki İzleme Web Sitesi</footer>
     <script>
-        // JavaScript kodları buraya eklenecek
+        function updateSensorData() {
+            fetch('/sensorData')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("plant-name").textContent = data.plantName;
+                    document.getElementById("soil-moisture").textContent = data.soilMoisture + "%";
+                    document.getElementById("temperature").textContent = data.temperature + "°C";
+                    document.getElementById("light-intensity").textContent = data.lightIntensity;
+                    updateChart(data.soilMoisture, data.temperature, data.lightIntensity);
+                });
+        }
+
+        function updateChart(soilMoisture, temperature, lightIntensity) {
+            var ctx = document.getElementById('sensor-chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Toprak Nem', 'Sıcaklık', 'Işık Şiddeti'],
+                    datasets: [{
+                        label: 'Sensör Verileri',
+                        data: [soilMoisture, temperature, lightIntensity],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
