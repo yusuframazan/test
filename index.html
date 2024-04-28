@@ -116,7 +116,7 @@
   </header>
 
   <main id="main-content">
-    <!-- Ana sayfa içeriği buraya gelecek -->
+    <!-- Bitki bilgileri, güncelleme düğmesi ve grafik burada olacak -->
   </main>
 
   <footer>
@@ -155,11 +155,16 @@
           document.getElementById("temperature").textContent = data.temperature || '---';
           document.getElementById("humidity").textContent = data.humidity || '---';
           document.getElementById("light-intensity").textContent = data.lightIntensity || '---';
+
+          // Grafik oluşturma fonksiyonunu buraya ekleyebilirsiniz
         })
         .catch(error => {
           console.error('Verileri güncelleme hatası:', error);
         });
     }
+
+    // Sayfa yüklendiğinde ana sayfayı göster
+    window.onload = loadHomePage;
   </script>
 </body>
 </html>
