@@ -1,6 +1,7 @@
 {
-  "temperature": 25.5,
-  "humidity": 60.2,
-  "lightIntensity": 350,
-  "soilMoisture": 480
+  "plantName": "Domates",
+  "soilMoisture": 50,
+  "temperature": 25,
+  "humidity": 60,
+  "lightIntensity": 500
 }
