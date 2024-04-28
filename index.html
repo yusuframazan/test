@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <title>Bitki İzleme Web Sitesi</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -117,6 +117,10 @@
   </main>
   <footer>© 2024 Bitki İzleme Web Sitesi</footer>
   <script>
+    window.onload = function() {
+      updateSensorData(); // Sayfa yüklendiğinde sensör verilerini güncelle
+    };
+
     function updateSensorData() {
       fetch('sensorData.json')
         .then(response => response.json())
@@ -130,6 +134,7 @@
         })
         .catch(error => console.error('Hata:', error)); 
     }
+
     function updateChart(soilMoisture, temperature, humidity, lightIntensity) {
       var ctx = document.getElementById('sensor-chart').getContext('2d');
       var myChart = new Chart(ctx, {
