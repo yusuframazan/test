@@ -1,6 +1,6 @@
 {
-  "plantName": "Bitki Adı",
-  "soilMoisture": 70,
-  "temperature": 25,
-  "lightIntensity": 500
+  "temperature": 25.5,
+  "humidity": 60.2,
+  "lightIntensity": 350,
+  "soilMoisture": 480
 }
