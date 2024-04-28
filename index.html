@@ -107,6 +107,9 @@
       <nav>
         <ul>
           <li><a href="#" onclick="loadHomePage()">Ana Sayfa</a></li>
+          <li><a href="#" onclick="loadPlantsPage()">Bitkiler</a></li>
+          <li><a href="#" onclick="loadAboutPage()">Hakkımızda</a></li>
+          <li><a href="#" onclick="loadContactPage()">İletişim</a></li>
         </ul>
       </nav>
     </div>
@@ -143,6 +146,7 @@
     }
 
     function updateSensorData() {
+      // Sensör verilerini güncellemek için AJAX isteği gönder
       fetch('https://yusuframazan.github.io/test/sensordata.json')
         .then(response => response.json())
         .then(data => {
@@ -151,69 +155,10 @@
           document.getElementById("temperature").textContent = data.temperature || '---';
           document.getElementById("humidity").textContent = data.humidity || '---';
           document.getElementById("light-intensity").textContent = data.lightIntensity || '---';
-
-          // Grafik oluşturma için verileri topla
-          var labels = [];  // Etiketler (zaman)
-          var sensorData = { temperature: [], humidity: [], lightIntensity: [], soilMoisture: [] }; // Sensör verileri
-          var now = new Date();
-          var currentTime = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-          labels.push(currentTime);
-          sensorData.temperature.push(data.temperature);
-          sensorData.humidity.push(data.humidity);
-          sensorData.lightIntensity.push(data.lightIntensity);
-          sensorData.soilMoisture.push(data.soilMoisture);
-
-          // Grafik oluşturma
-          createChart(labels, sensorData);
         })
         .catch(error => {
           console.error('Verileri güncelleme hatası:', error);
         });
-    }
-
-    // Grafik oluşturma
-    function createChart(labels, data) {
-      var ctx = document.getElementById('sensor-chart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Sıcaklık (°C)',
-            data: data.temperature,
-            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Fill color
-            borderColor: 'rgba(255, 99, 132, 1)',       // Line color
-            borderWidth: 1
-          }, {
-            label: 'Nem (%)',
-            data: data.humidity,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Fill color
-            borderColor: 'rgba(54, 162, 235, 1)',       // Line color
-            borderWidth: 1
-          }, {
-            label: 'Işık Şiddeti',
-            data: data.lightIntensity,
-            backgroundColor: 'rgba(255, 206, 86, 0.2)', // Fill color
-            borderColor: 'rgba(255, 206, 86, 1)',       // Line color
-            borderWidth: 1
-          }, {
-            label: 'Toprak Nem',
-            data: data.soilMoisture,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill color
-            borderColor: 'rgba(75, 192, 192, 1)',       // Line color
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      });
     }
   </script>
 </body>
