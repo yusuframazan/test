@@ -1,7 +1,6 @@
 {
-  "plantName": "Lale",
+  "plantName": "Bitki Adı",
   "soilMoisture": 50,
   "temperature": 25,
-  "humidity": 60,
   "lightIntensity": 500
 }
