@@ -131,12 +131,12 @@
           <p>Bitki Adı: <span id="plant-name">---</span></p>
           <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
           <p>Hava Sıcaklığı: <span id="temperature">---</span>°C</p>
-          <p>Işık Şiddeti: <span id="light-intensity">---</span></p> <!-- Burada ışık şiddeti değerini ekledim -->
+          <p>Nem: <span id="humidity">---</span>%</p>
+          <p>Işık Şiddeti: <span id="light-intensity">---</span></p>
         </section>
 
         <div class="controls">
           <button onclick="updateSensorData()">Verileri Güncelle</button>
-          <!-- Diğer kontroller burada yer alabilir -->
         </div>
 
         <div class="chart-container">
@@ -145,60 +145,23 @@
       `;
     }
 
-    function loadPlantsPage() {
-      document.getElementById("main-content").innerHTML = `
-        <h2>Bitkiler ve Bakım Bilgileri</h2>
-        <p><strong>Domates:</strong></p>
-        <ul>
-          <li><strong>Toprak Nem Oranı:</strong> Nemli toprak sever.</li>
-          <li><strong>Işık Şiddeti:</strong> Direkt güneş ışığı alan ortamları sever.</li>
-          <li><strong>Sıcaklık:</strong> 18-24°C arası idealdir.</li>
-          <li><strong>Sulama:</strong> Düzenli sulama yapılmalıdır.</li>
-        </ul>
-        <p><strong>Biber:</strong></p>
-        <ul>
-          <li><strong>Toprak Nem Oranı:</strong> Orta nemli toprakları tercih eder.</li>
-          <li><strong>Işık Şiddeti:</strong> Bol güneş ışığı alan yerleri sever.</li>
-          <li><strong>Sıcaklık:</strong> 20-25°C arası idealdir.</li>
-          <li><strong>Sulama:</strong> Düzenli sulama yapılmalıdır, ancak fazla suya ihtiyaç duymaz.</li>
-        </ul>
-      `;
-    }
-
-    function loadAboutPage() {
-      document.getElementById("main-content").innerHTML = `
-        <h1>Hakkımızda</h1>
-        <p>Bitki İzleme Web Sitesi, bitkilerin sağlık durumunu izlemek ve kontrol etmek için tasarlanmıştır.</p>
-        <p>Amacımız, bitkilerin doğru bakımını sağlamak ve kullanıcılara bitki yetiştirme sürecinde yardımcı olmaktır.</p>
-        <p>Bizimle iletişime geçmekten çekinmeyin!</p>
-      `;
-    }
-
-    function loadContactPage() {
-      document.getElementById("main-content").innerHTML = `
-        <h1>İletişim</h1>
-        <p>Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz:</p>
-        <ul>
-          <li>Telefon: 123-456-7890</li>
-          <li>E-posta: info@bitkiizleme.com</li>
-          <li>Adres: Örnek Cad. No: 123, İstanbul, Türkiye</li>
-        </ul>
-      `;
-    }
-
     function updateSensorData() {
-      // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
-      // Örneğin, AJAX isteği kullanarak sunucudan yeni verileri çekebilir ve HTML içeriğini güncelleyebilirsiniz.
-      document.getElementById("plant-name").textContent = "Papatya";
-      document.getElementById("soil-moisture").textContent = "50";
-      document.getElementById("temperature").textContent = "25";
-      document.getElementById("light-intensity").textContent = "500"; // Işık şiddeti değerini güncelledim
-
-      // Grafik verilerini güncelle
-      updateChart();
+      fetch("https://yusuframazan.github.io/test/sensordata.json")
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("plant-name").textContent = "Bitki Adı"; // Buraya ESP32'den alınacak bitki adı
+          document.getElementById("soil-moisture").textContent = data.soilMoisture + "%";
+          document.getElementById("temperature").textContent = data.temperature + "°C";
+          document.getElementById("humidity").textContent = data.humidity + "%";
+          document.getElementById("light-intensity").textContent = data.lightIntensity;
+          updateChart(data.soilMoisture, data.temperature, data.lightIntensity);
+        })
+        .catch(error => {
+          console.error("Veriler alınırken hata oluştu:", error);
+        });
     }
 
-    function updateChart() {
+    function updateChart(soilMoisture, temperature, lightIntensity) {
       var ctx = document.getElementById('sensor-chart').getContext('2d');
       var myChart = new Chart(ctx, {
         type: 'bar',
@@ -206,7 +169,7 @@
           labels: ['Toprak Nem', 'Sıcaklık', 'Işık Şiddeti'],
           datasets: [{
             label: 'Sensör Verileri',
-            data: [50, 25, 500], // Örnek veriler, gerçek verilerle değiştirilecek
+            data: [soilMoisture, temperature, lightIntensity],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
