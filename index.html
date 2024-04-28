@@ -116,21 +116,7 @@
   </header>
 
   <main id="main-content">
-    <section class="plant-info">
-      <h2>Bitki Bilgileri</h2>
-      <p>Bitki Adı: <span id="plant-name">---</span></p>
-      <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
-      <p>Hava Sıcaklığı: <span id="temperature">---</span>°C</p>
-    </section>
-
-    <div class="controls">
-      <button onclick="updateSensorData()">Verileri Güncelle</button>
-      <!-- Diğer kontroller burada yer alabilir -->
-    </div>
-
-    <div class="chart-container">
-      <canvas id="sensor-chart"></canvas>
-    </div>
+    <!-- Ana sayfa içeriği buraya gelecek -->
   </main>
 
   <footer>
@@ -145,6 +131,7 @@
           <p>Bitki Adı: <span id="plant-name">---</span></p>
           <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
           <p>Hava Sıcaklığı: <span id="temperature">---</span>°C</p>
+          <p>Işık Şiddeti: <span id="light-intensity">---</span></p> <!-- Burada ışık şiddeti değerini ekledim -->
         </section>
 
         <div class="controls">
@@ -156,6 +143,7 @@
           <canvas id="sensor-chart"></canvas>
         </div>
       `;
+      updateSensorData(); // Sayfa yüklendiğinde sensör verilerini güncelle
     }
 
     function loadPlantsPage() {
@@ -200,17 +188,21 @@
     }
 
     function updateSensorData() {
-      // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
-      // Örneğin, AJAX isteği kullanarak sunucudan yeni verileri çekebilir ve HTML içeriğini güncelleyebilirsiniz.
-      document.getElementById("plant-name").textContent = "Papatya";
-      document.getElementById("soil-moisture").textContent = "50";
-      document.getElementById("temperature").textContent = "25";
+      fetch('sensorData.json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("plant-name").textContent = data.plantName;
+          document.getElementById("soil-moisture").textContent = data.soilMoisture;
+          document.getElementById("temperature").textContent = data.temperature;
+          document.getElementById("light-intensity").textContent = data.lightIntensity;
 
-      // Grafik verilerini güncelle
-      updateChart();
+          // Grafik verilerini güncelle
+          updateChart(data.soilMoisture, data.temperature, data.lightIntensity);
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
     }
 
-    function updateChart() {
+    function updateChart(soilMoisture, temperature, lightIntensity) {
       var ctx = document.getElementById('sensor-chart').getContext('2d');
       var myChart = new Chart(ctx, {
         type: 'bar',
@@ -218,7 +210,7 @@
           labels: ['Toprak Nem', 'Sıcaklık', 'Işık Şiddeti'],
           datasets: [{
             label: 'Sensör Verileri',
-            data: [50, 25, 75], // Örnek veriler, gerçek verilerle değiştirilecek
+            data: [soilMoisture, temperature, lightIntensity],
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(54, 162, 235, 0.2)',
@@ -243,4 +235,4 @@
     }
   </script>
 </body>
-</html>  
+</html>
