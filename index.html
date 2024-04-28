@@ -81,6 +81,15 @@
       bottom: 0;
       width: 100%;
     }
+    /* Yükleme animasyonu için stiller */
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .loading img {
+      width: 50px;
+    }
   </style>
 </head>
 <body>
@@ -114,6 +123,11 @@
     <div class="chart-container">
       <canvas id="sensor-chart"></canvas>
     </div>
+    <!-- Yükleme animasyonu -->
+    <div class="loading" id="loading">
+      <img src="loading.gif" alt="Yükleniyor...">
+      <p>Veriler yükleniyor...</p>
+    </div>
   </main>
   <footer>© 2024 Bitki İzleme Web Sitesi</footer>
   <script>
@@ -122,6 +136,8 @@
     };
 
     function updateSensorData() {
+      document.getElementById("loading").style.display = "block"; // Yükleme animasyonunu göster
+
       fetch('sensorData.json')
         .then(response => response.json())
         .then(data => {
@@ -131,8 +147,12 @@
           document.getElementById("humidity").textContent = data.humidity + "%";
           document.getElementById("light-intensity").textContent = data.lightIntensity + " lux";
           updateChart(data.soilMoisture, data.temperature, data.humidity, data.lightIntensity);
+          document.getElementById("loading").style.display = "none"; // Yükleme animasyonunu gizle
         })
-        .catch(error => console.error('Hata:', error)); 
+        .catch(error => {
+          console.error('Hata:', error);
+          document.getElementById("loading").style.display = "none"; // Yükleme animasyonunu gizle
+        }); 
     }
 
     function updateChart(soilMoisture, temperature, humidity, lightIntensity) {
