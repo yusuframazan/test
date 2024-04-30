@@ -12,15 +12,17 @@
     <script>
         // Sensor verilerini güncelleme fonksiyonu
         function updateSensorData() {
-            // Sensor verilerini al
-            var temperature = 25; // Örnek olarak sabit bir sıcaklık
-            var humidity = 50;    // Örnek olarak sabit bir nem
-
-            // Alınan verileri HTML içine yerleştir
-            document.getElementById('sensorData').innerHTML = `
-                <p>Sıcaklık: ${temperature} °C</p>
-                <p>Nem: ${humidity} %</p>
-            `;
+            // sensorData.json dosyasından veriyi almak için bir HTTP GET isteği gönder
+            fetch('sensorData.json')
+            .then(response => response.json()) // JSON veriyi parse et
+            .then(data => {
+                // Alınan verileri HTML içine yerleştir
+                document.getElementById('sensorData').innerHTML = `
+                    <p>Sıcaklık: ${data.temperature} °C</p>
+                    <p>Nem: ${data.humidity} %</p>
+                `;
+            })
+            .catch(error => console.error('Hata:', error)); // Hata durumunda konsola bir hata mesajı yazdır
         }
 
         // İlk veriyi güncelle
