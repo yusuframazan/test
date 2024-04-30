@@ -1,26 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Data</title>
+    <title>Bitki İzleme Web Sitesi</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Genel stil tanımlamalarını burada yapabilirsiniz */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .plant-info {
+            margin-bottom: 20px;
+        }
+        .plant-info h2 {
+            color: #4caf50;
+        }
+        .plant-info p {
+            color: #333;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background-color: #388e3c;
+        }
+        .chart-container {
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #4caf50;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Sensor Data</h1>
-    <div id="sensorData"></div>
-
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>Bitki İzleme Web Sitesi</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="loadHomePage()">Ana Sayfa</a></li>
+                    <li><a href="#" onclick="loadPlantsPage()">Bitkiler</a></li>
+                    <li><a href="#" onclick="loadAboutPage()">Hakkımızda</a></li>
+                    <li><a href="#" onclick="loadContactPage()">İletişim</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content">
+        <section class="plant-info">
+            <h2>Bitki Bilgileri</h2>
+            <p>Bitki Adı: <span id="plant-name">---</span></p>
+            <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
+            <p>Hava Sıcaklığı: <span id="temperature">---</span>°C</p>
+            <p>Işık Şiddeti: <span id="light-intensity">---</span></p>
+        </section>
+        <div class="controls">
+            <button onclick="updateSensorData()">Verileri Güncelle</button>
+        </div>
+        <div class="chart-container">
+            <canvas id="sensor-chart"></canvas>
+        </div>
+    </main>
+    <footer>© 2024 Bitki İzleme Web Sitesi</footer>
     <script>
-        // sensorData.json dosyasından veriyi almak için bir HTTP GET isteği gönder
-        fetch('/sensorData.json')
-        .then(response => response.json()) // JSON veriyi parse et
-        .then(data => {
-            // Alınan verileri HTML içine yerleştir
-            document.getElementById('sensorData').innerHTML = `
-                <p>Sıcaklık: ${data.temperature} °C</p>
-                <p>Nem: ${data.humidity} %</p>
-            `;
-        })
-        .catch(error => console.error('Hata:', error)); // Hata durumunda konsola bir hata mesajı yazdır
+        function updateSensorData() {
+            fetch('https://yusuframazan.github.io/test/sensorData.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("plant-name").textContent = data.plantName;
+                    document.getElementById("soil-moisture").textContent = data.soilMoisture + "%";
+                    document.getElementById("temperature").textContent = data.temperature + "°C";
+                    document.getElementById("light-intensity").textContent = data.lightIntensity;
+                    updateChart(data.soilMoisture, data.temperature, data.lightIntensity);
+                })
+                .catch(error => {
+                    console.error('Veri alınırken bir hata oluştu:', error);
+                });
+        }
+
+        function updateChart(soilMoisture, temperature, lightIntensity) {
+            var ctx = document.getElementById('sensor-chart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Toprak Nem', 'Sıcaklık', 'Işık Şiddeti'],
+                    datasets: [{
+                        label: 'Sensör Verileri',
+                        data: [soilMoisture, temperature, lightIntensity],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
