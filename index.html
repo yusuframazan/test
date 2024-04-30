@@ -11,7 +11,7 @@
 
     <script>
         // sensorData.json dosyasından veriyi almak için bir HTTP GET isteği gönder
-        fetch('/sensorData.json')
+        fetch('sensorData.json')
         .then(response => response.json()) // JSON veriyi parse et
         .then(data => {
             // Alınan verileri HTML içine yerleştir
