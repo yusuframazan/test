@@ -12,8 +12,8 @@
     <script>
         // Sensor verilerini güncelleme fonksiyonu
         function updateSensorData() {
-            // sensorData.json dosyasından veriyi almak için bir HTTP GET isteği gönder
-            fetch('sensorData.json')
+            // SPIFFS dosyasından veriyi almak için bir HTTP GET isteği gönder
+            fetch('https://raw.githubusercontent.com/yusuframazan/test/main/data.json')
             .then(response => response.json()) // JSON veriyi parse et
             .then(data => {
                 // Alınan verileri HTML içine yerleştir
