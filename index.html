@@ -10,24 +10,24 @@
     <div id="sensorData"></div>
 
     <script>
-        function fetchData() {
-            fetch('sensorData.json')
-            .then(response => response.json()) // JSON veriyi parse et
-            .then(data => {
-                // Alınan verileri HTML içine yerleştir
-                document.getElementById('sensorData').innerHTML = `
-                    <p>Sıcaklık: ${data.temperature} °C</p>
-                    <p>Nem: ${data.humidity} %</p>
-                `;
-            })
-            .catch(error => console.error('Hata:', error)); // Hata durumunda konsola bir hata mesajı yazdır
+        // Sensor verilerini güncelleme fonksiyonu
+        function updateSensorData() {
+            // Sensor verilerini al
+            var temperature = 25; // Örnek olarak sabit bir sıcaklık
+            var humidity = 50;    // Örnek olarak sabit bir nem
+
+            // Alınan verileri HTML içine yerleştir
+            document.getElementById('sensorData').innerHTML = `
+                <p>Sıcaklık: ${temperature} °C</p>
+                <p>Nem: ${humidity} %</p>
+            `;
         }
 
-        // İlk veriyi al
-        fetchData();
+        // İlk veriyi güncelle
+        updateSensorData();
 
-        // Her 5 saniyede bir veriyi güncelle
-        setInterval(fetchData, 5000);
+        // Belirli bir aralıkla sensör verilerini güncelle
+        setInterval(updateSensorData, 5000); // Her 5 saniyede bir
     </script>
 </body>
 </html>
