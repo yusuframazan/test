@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensör Geçmişleri</title>
+</head>
+<body>
+    <h1>Sensör Geçmişleri</h1>
+    <ul id="sensorData"></ul>
+
+    <a href="index.html">Ana Sayfa</a>
+
+    <script src="data.js"></script>
+    <script>
+        // Veriyi çek ve göster
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const sensorDataList = document.getElementById('sensorData');
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${item.date} ${item.time} - Sıcaklık: ${item.temperature} °C, Nem: ${item.humidity} %`;
+                    sensorDataList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Hata:', error));
+    </script>
+</body>
+</html>
