@@ -1,147 +1,163 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bitki İzleme Web Sitesi</title>
-  <!-- Chart.js kütüphanesini ekleyelim -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Genel stil tanımlamalarını burada yapabilirsiniz */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5; /* Açık gri arka plan */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitki İzleme Web Sitesi</title>
+    <!-- Chart.js kütüphanesini ekleyelim -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Genel stil tanımlamalarını burada yapabilirsiniz */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Açık gri arka plan */
+        }
+        
+        header {
+            background-color: #4caf50; /* Yeşil tonları */
+            color: #fff; /* Beyaz metin */
+            padding: 10px 0;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo h1 {
+            margin: 0;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        
+        nav ul li a {
+            color: #fff; /* Beyaz metin */
+            text-decoration: none;
+        }
+        
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Beyaz arka plan */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plant-info {
+            margin-bottom: 20px;
+        }
+        
+        .plant-info h2 {
+            color: #4caf50; /* Yeşil tonları */
+        }
+        
+        .plant-info p {
+            color: #333; /* Koyu gri metin */
+        }
+        
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50; /* Yeşil tonları */
+            color: #fff; /* Beyaz metin */
+            border: none;
+            border-radius: 4px; /* Yuvarlatılmış kenarlar */
+            cursor: pointer;
+        }
+        
+        .controls button:hover {
+            background-color: #388e3c; /* Koyu yeşil hover rengi */
+        }
+        
+        .chart-container {
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #4caf50; /* Yeşil tonları */
+            color: #fff; /* Beyaz metin */
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
 
-    header {
-      background-color: #4caf50; /* Yeşil tonları */
-      color: #fff; /* Beyaz metin */
-      padding: 10px 0;
-    }
+        /* Tablo stilleri */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-    }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
 
-    .logo h1 {
-      margin: 0;
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav ul li {
-      display: inline;
-      margin-right: 20px;
-    }
-
-    nav ul li a {
-      color: #fff; /* Beyaz metin */
-      text-decoration: none;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff; /* Beyaz arka plan */
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .plant-info {
-      margin-bottom: 20px;
-    }
-
-    .plant-info h2 {
-      color: #4caf50; /* Yeşil tonları */
-    }
-
-    .plant-info p {
-      color: #333; /* Koyu gri metin */
-    }
-
-    .controls button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4caf50; /* Yeşil tonları */
-      color: #fff; /* Beyaz metin */
-      border: none;
-      border-radius: 4px; /* Yuvarlatılmış kenarlar */
-      cursor: pointer;
-    }
-
-    .controls button:hover {
-      background-color: #388e3c; /* Koyu yeşil hover rengi */
-    }
-
-    .chart-container {
-      margin-top: 20px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 10px 0;
-      background-color: #4caf50; /* Yeşil tonları */
-      color: #fff; /* Beyaz metin */
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-  <header>
+<header>
     <div class="navbar">
-      <div class="logo">
-        <h1>Bitki İzleme Web Sitesi</h1>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#" onclick="loadHomePage()">Ana Sayfa</a></li>
-          <li><a href="#" onclick="loadPlantsPage()">Bitkiler</a></li>
-          <li><a href="#" onclick="loadAboutPage()">Hakkımızda</a></li>
-          <li><a href="#" onclick="loadContactPage()">İletişim</a></li>
-          <li><a href="#" onclick="loadDataHistory()">Veri Geçmişi</a></li> <!-- Yeni bağlantı -->
-        </ul>
-      </nav>
+        <div class="logo">
+            <h1>Bitki İzleme Web Sitesi</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="loadHomePage()">Ana Sayfa</a></li>
+                <li><a href="#" onclick="loadPlantsPage()">Bitkiler</a></li>
+                <li><a href="#" onclick="loadAboutPage()">Hakkımızda</a></li>
+                <li><a href="#" onclick="loadContactPage()">İletişim</a></li>
+                <li><a href="#" onclick="loadDataHistory()">Veri Geçmişi</a></li> <!-- Yeni bağlantı -->
+            </ul>
+        </nav>
     </div>
-  </header>
+</header>
 
-  <main id="main-content">
+<main id="main-content">
     <section class="plant-info">
-      <h2>Bitki Bilgileri</h2>
-      <p>Bitki Adı: <span id="plant-name">---</span></p>
-      <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
-      <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p> <!-- Güncel sıcaklık alanı -->
-      <p>Nem Oranı: <span id="current-humidity">---</span>%</p> <!-- Güncel nem alanı -->
+        <h2>Bitki Bilgileri</h2>
+        <p>Bitki Adı: <span id="plant-name">---</span></p>
+        <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
+        <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p> <!-- Güncel sıcaklık alanı -->
+        <p>Nem Oranı: <span id="current-humidity">---</span>%</p> <!-- Güncel nem alanı -->
     </section>
 
     <div class="controls">
-      <button onclick="updateSensorData()">Verileri Güncelle</button>
-      <!-- Diğer kontroller burada yer alabilir -->
+        <button onclick="updateSensorData()">Verileri Güncelle</button>
+        <!-- Diğer kontroller burada yer alabilir -->
     </div>
 
     <div class="chart-container">
-      <canvas id="sensor-chart"></canvas>
+        <canvas id="sensor-chart"></canvas>
     </div>
-  </main>
+</main>
 
-  <footer>
+<footer>
     © 2024 Bitki İzleme Web Sitesi
-  </footer>
+</footer>
 
-  <script>
+<script>
     function loadHomePage() {
-      document.getElementById("main-content").innerHTML = `
+        document.getElementById("main-content").innerHTML = `
         <section class="plant-info">
           <h2>Bitki Bilgileri</h2>
           <p>Bitki Adı: <span id="plant-name">---</span></p>
@@ -162,7 +178,7 @@
     }
 
     function loadPlantsPage() {
-      document.getElementById("main-content").innerHTML = `
+        document.getElementById("main-content").innerHTML = `
         <h2>Bitkiler ve Bakım Bilgileri</h2>
         <p><strong>Domates:</strong></p>
         <ul>
@@ -182,7 +198,7 @@
     }
 
     function loadAboutPage() {
-      document.getElementById("main-content").innerHTML = `
+        document.getElementById("main-content").innerHTML = `
         <h1>Hakkımızda</h1>
         <p>Bitki İzleme Web Sitesi, bitkilerin sağlık durumunu izlemek ve kontrol etmek için tasarlanmıştır.</p>
         <p>Amacımız, bitkilerin doğru bakımını sağlamak ve kullanıcılara bitki yetiştirme sürecinde yardımcı olmaktır.</p>
@@ -191,7 +207,7 @@
     }
 
     function loadContactPage() {
-      document.getElementById("main-content").innerHTML = `
+        document.getElementById("main-content").innerHTML = `
         <h1>İletişim</h1>
         <p>Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz:</p>
         <ul>
@@ -202,13 +218,11 @@
       `;
     }
 
- function loadDataHistory() {
-    // Sensör verilerinin tüm geçmişini yükle ve göster
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
-        .then(response => response.json())
-        .then(data => {
-            // Verileri tablo halinde oluştur
-            let tableHTML = `
+    function loadDataHistory() {
+        fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+            .then(response => response.json())
+            .then(data => {
+                let tableHTML = `
                 <h2>Veri Geçmişi</h2>
                 <table>
                     <thead>
@@ -219,79 +233,66 @@
                         </tr>
                     </thead>
                     <tbody>`;
-            // Tüm sensör verilerini döngüyle tabloya ekle
-            Object.keys(data).forEach(key => {
-                const sensor = data[key];
-                const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
-                const temperature = sensor.temperature;
-                const humidity = sensor.humidity;
-                // Her veriyi tabloya eklerken satırı düzenle
-                tableHTML += `
+                Object.keys(data).forEach(key => {
+                    const sensor = data[key];
+                    const time = new Date(sensor.time).toLocaleString();
+                    const temperature = sensor.temperature;
+                    const humidity = sensor.humidity;
+                    tableHTML += `
                     <tr>
                         <td>${time}</td>
                         <td>${temperature}</td>
                         <td>${humidity}</td>
                     </tr>
                 `;
-            });
-            tableHTML += `</tbody></table>`;
-            // "main-content" alanının içeriğini değiştir
-            document.getElementById("main-content").innerHTML = tableHTML;
-        })
-        .catch(error => console.error('Veri alınamadı:', error));
-}
-
-
+                });
+                tableHTML += `</tbody></table>`;
+                document.getElementById("main-content").innerHTML = tableHTML;
+            })
+            .catch(error => console.error('Veri alınamadı:', error));
+    }
 
     function updateSensorData() {
-      // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
-      // Örneğin, AJAX isteği kullanarak sunucudan yeni verileri çekebilir ve HTML içeriğini güncelleyebilirsiniz.
-      fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
-        .then(response => response.json())
-        .then(data => {
-          // En son ölçümü al
-          const latestReading = data[Object.keys(data).pop()];
-          // Güncel sıcaklık ve nem değerlerini güncelle
-          document.getElementById('current-temperature').textContent = latestReading.temperature;
-          document.getElementById('current-humidity').textContent = latestReading.humidity;
-        })
-        .catch(error => console.error('Veri alınamadı:', error));
+        fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+            .then(response => response.json())
+            .then(data => {
+                const latestReading = data[Object.keys(data).pop()];
+                document.getElementById('current-temperature').textContent = latestReading.temperature;
+                document.getElementById('current-humidity').textContent = latestReading.humidity;
 
-      // Grafik verilerini güncelle
-      updateChart();
+                // Grafik verilerini güncelle
+                updateChart(latestReading.temperature);
+            })
+            .catch(error => console.error('Veri alınamadı:', error));
     }
 
-    function updateChart() {
-      var ctx = document.getElementById('sensor-chart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Toprak Nem', 'Sıcaklık', 'Işık Şiddeti'],
-          datasets: [{
-            label: 'Sensör Verileri',
-            data: [50, 25, 75], // Örnek veriler, gerçek verilerle değiştirilecek
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
+    function updateChart(temperature) {
+        var ctx = document.getElementById('sensor-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Sıcaklık'],
+                datasets: [{
+                    label: 'Sıcaklık (°C)',
+                    data: [temperature],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-          }
-        }
-      });
+        });
     }
-  </script>
+</script>
 </body>
 </html>
