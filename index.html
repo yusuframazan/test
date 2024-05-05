@@ -202,7 +202,7 @@
       `;
     }
 
-  function loadDataHistory() {
+ function loadDataHistory() {
     // Sensör verilerinin tüm geçmişini yükle ve göster
     fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
         .then(response => response.json())
@@ -240,6 +240,7 @@
         })
         .catch(error => console.error('Veri alınamadı:', error));
 }
+
 
 
     function updateSensorData() {
