@@ -205,56 +205,38 @@
     function loadDataHistoryPage() {
       // Bu kısım senör verisi geçmişinin gösterildiği bir sayfa olabilir
       // Örneğin, AJAX isteği kullanarak sunucudan tüm ölçülen sensör verilerini çekebilir ve HTML içeriğini oluşturabilirsiniz.
-      // Bu verileri tablo veya grafik şeklinde gösterebilirsiniz.
-      document.getElementById("main-content").innerHTML = `
-        <h2>Veri Geçmişi</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Zaman</th>
-              <th>Sıcaklık (°C)</th>
-              <th>Nem (%)</th>
-            </tr>
-          </thead>
-          <tbody id="sensor-data-history">
-            <!-- Veri geçmişi burada gösterilecek -->
-          </tbody>
-        </table>
-      `;
-      // Örnek olarak burada sunucudan tüm ölçülen sensör verilerini alabilir ve tabloya ekleyebilirsiniz
-      // Örneğin:
-      // fetch('sunucu_adresi/veri_gecmisi')
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     const sensorDataHistory = document.getElementById('sensor-data-history');
-      //     data.forEach(sensor => {
-      //       const row = `
-      //         <tr>
-      //           <td>${sensor.timestamp}</td>
-      //           <td>${sensor.temperature}</td>
-      //           <td>${sensor.humidity}</td>
-      //         </tr>
-      //       `;
-      //       sensorDataHistory.innerHTML += row;
-      //     });
-      //   })
-      //   .catch(error => console.error('Veri alınamadı:', error));
+      // Bu verileri tablo veya grafik şeklinde gösterebilirsiniz
+      fetch('sunucu_adresi/veri_gecmisi')
+        .then(response => response.json())
+        .then(data => {
+          const sensorDataHistory = document.getElementById('sensor-data-history');
+          data.forEach(sensor => {
+            const row = `
+              <tr>
+                <td>${sensor.timestamp}</td>
+                <td>${sensor.temperature}</td>
+                <td>${sensor.humidity}</td>
+              </tr>
+            `;
+            sensorDataHistory.innerHTML += row;
+          });
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
     }
 
    function updateSensorData() {
-  // Güncel sensör verilerini burada alabilirsiniz (örneğin AJAX isteğiyle sunucudan)
-  // Örnek olarak sabit değerler kullanıyorum
-  var temperature = 25;
-  var humidity = 50;
+      // Güncel sensör verilerini burada alabilirsiniz (örneğin AJAX isteğiyle sunucudan)
+      // Örnek olarak sabit değerler kullanıyorum
+      var temperature = 25;
+      var humidity = 50;
 
-  // Güncel sensör verilerini HTML içeriğine yerleştirme
-  document.getElementById("temperature").textContent = temperature;
-  document.getElementById("soil-moisture").textContent = humidity;
+      // Güncel sensör verilerini HTML içeriğine yerleştirme
+      document.getElementById("current-temperature").textContent = temperature;
+      document.getElementById("soil-moisture").textContent = humidity;
 
-  // Grafik verilerini güncelleme
-  updateChart(temperature);
-}
-
+      // Grafik verilerini güncelleme
+      updateChart(temperature);
+    }
 
     function updateCurrentTemperature() {
       // Hava sıcaklığı verisini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
