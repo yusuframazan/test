@@ -202,7 +202,7 @@
       `;
     }
 
-  function loadDataHistory() {
+  ffunction loadDataHistory() {
     // Sensör verilerinin tüm geçmişini yükle ve göster
     fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
         .then(response => response.json())
@@ -225,6 +225,7 @@
                 const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
                 const temperature = sensor.temperature;
                 const humidity = sensor.humidity;
+                // Her veriyi tabloya eklerken satırı düzenle
                 tableHTML += `
                     <tr>
                         <td>${time}</td>
@@ -239,6 +240,7 @@
         })
         .catch(error => console.error('Veri alınamadı:', error));
 }
+
 
     function updateSensorData() {
       // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
