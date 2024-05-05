@@ -42,7 +42,7 @@
                 const sensorData = document.getElementById('sensorData');
                 Object.keys(data).forEach(key => {
                     const sensor = data[key];
-                    const timestamp = new Date(parseInt(key));
+                    const timestamp = new Date(parseInt(key) * 1000); // Saniyeye çevir
                     const temperature = sensor.temperature;
                     const humidity = sensor.humidity;
                     const row = `
@@ -58,4 +58,4 @@
             .catch(error => console.error('Veri alınamadı:', error));
     </script>
 </body>
-</html> 
+</html>
