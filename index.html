@@ -43,7 +43,7 @@
                 Object.keys(data).forEach(key => {
                     const sensor = data[key];
                     const timestamp = new Date(sensor.timestamp * 1000); // Zaman damgasını milisaniyeye çevir
-                    const formattedTimestamp = timestamp.toLocaleString(); // Tarih ve saat formatını ayarla
+                    const formattedTimestamp = formatDate(timestamp); // Tarih ve saat formatını ayarla
                     const temperature = sensor.temperature;
                     const humidity = sensor.humidity;
                     const row = `
@@ -57,6 +57,11 @@
                 });
             })
             .catch(error => console.error('Veri alınamadı:', error));
+
+        function formatDate(date) {
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            return date.toLocaleString('tr-TR', options);
+        }
     </script>
 </body>
 </html>
