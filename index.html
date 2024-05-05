@@ -42,13 +42,12 @@
                 const sensorData = document.getElementById('sensorData');
                 Object.keys(data).forEach(key => {
                     const sensor = data[key];
-                    const timestamp = new Date(sensor.timestamp * 1000); // Zaman damgasını milisaniyeye çevir
-                    const formattedTimestamp = timestamp.toLocaleString(); // Tarih ve saat formatını ayarla
+                    const time = sensor.time;
                     const temperature = sensor.temperature;
                     const humidity = sensor.humidity;
                     const row = `
                         <tr>
-                            <td>${formattedTimestamp}</td>
+                            <td>${time}</td>
                             <td>${temperature}</td>
                             <td>${humidity}</td>
                         </tr>
