@@ -202,41 +202,43 @@
       `;
     }
 
-    function loadDataHistory() {
-      // Sensör verilerinin tüm geçmişini yükle ve göster
-      fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+  function loadDataHistory() {
+    // Sensör verilerinin tüm geçmişini yükle ve göster
+    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
         .then(response => response.json())
         .then(data => {
-          // Verileri tablo halinde oluştur
-          let tableHTML = `<h2>Veri Geçmişi</h2>
-                           <table>
-                             <thead>
-                               <tr>
-                                 <th>Zaman</th>
-                                 <th>Sıcaklık (°C)</th>
-                                 <th>Nem (%)</th>
-                               </tr>
-                             </thead>
-                             <tbody>`;
-          // Tüm sensör verilerini döngüyle tabloya ekle
-          Object.keys(data).forEach(key => {
-            const sensor = data[key];
-            const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
-            const temperature = sensor.temperature;
-            const humidity = sensor.humidity;
-            tableHTML += `
-              <tr>
-                <td>${time}</td>
-                <td>${temperature}</td>
-                <td>${humidity}</td>
-              </tr>
-            `;
-          });
-          tableHTML += `</tbody></table>`;
-          document.getElementById("main-content").innerHTML = tableHTML;
+            // Verileri tablo halinde oluştur
+            let tableHTML = `
+                <h2>Veri Geçmişi</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Zaman</th>
+                            <th>Sıcaklık (°C)</th>
+                            <th>Nem (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            // Tüm sensör verilerini döngüyle tabloya ekle
+            Object.keys(data).forEach(key => {
+                const sensor = data[key];
+                const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
+                const temperature = sensor.temperature;
+                const humidity = sensor.humidity;
+                tableHTML += `
+                    <tr>
+                        <td>${time}</td>
+                        <td>${temperature}</td>
+                        <td>${humidity}</td>
+                    </tr>
+                `;
+            });
+            tableHTML += `</tbody></table>`;
+            // "main-content" alanının içeriğini değiştir
+            document.getElementById("main-content").innerHTML = tableHTML;
         })
         .catch(error => console.error('Veri alınamadı:', error));
-    }
+}
 
     function updateSensorData() {
       // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
