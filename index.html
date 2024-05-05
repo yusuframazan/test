@@ -141,12 +141,13 @@
   <script>
     function loadHomePage() {
       document.getElementById("main-content").innerHTML = `
-        <section class="plant-info">
-          <h2>Bitki Bilgileri</h2>
-          <p>Bitki Adı: <span id="plant-name">---</span></p>
-          <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
-          <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
-        </section>
+       <section class="plant-info">
+  <h2>Bitki Bilgileri</h2>
+  <p>Bitki Adı: <span id="plant-name">Papatya</span></p>
+  <p>Toprak Nem: <span id="soil-moisture">50</span>%</p>
+  <p>Hava Sıcaklığı: <span id="current-temperature">25</span>°C</p>
+</section>
+
 
         <div class="controls">
           <button onclick="updateSensorData()">Verileri Güncelle</button>
