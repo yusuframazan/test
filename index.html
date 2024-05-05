@@ -241,16 +241,20 @@
       //   .catch(error => console.error('Veri alınamadı:', error));
     }
 
-    function updateSensorData() {
-      // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
-      // Örneğin, AJAX isteği kullanarak sunucudan yeni verileri çekebilir ve HTML içeriğini güncelleyebilirsiniz.
-      document.getElementById("plant-name").textContent = "Papatya";
-      document.getElementById("soil-moisture").textContent = "50";
-      document.getElementById("current-temperature").textContent = "25";
+   function updateSensorData() {
+  // Güncel sensör verilerini burada alabilirsiniz (örneğin AJAX isteğiyle sunucudan)
+  // Örnek olarak sabit değerler kullanıyorum
+  var temperature = 25;
+  var humidity = 50;
 
-      // Grafik verilerini güncelle
-      updateChart();
-    }
+  // Güncel sensör verilerini HTML içeriğine yerleştirme
+  document.getElementById("temperature").textContent = temperature;
+  document.getElementById("soil-moisture").textContent = humidity;
+
+  // Grafik verilerini güncelleme
+  updateChart(temperature);
+}
+
 
     function updateCurrentTemperature() {
       // Hava sıcaklığı verisini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
