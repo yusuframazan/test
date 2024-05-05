@@ -42,7 +42,7 @@
                 const sensorData = document.getElementById('sensorData');
                 Object.keys(data).forEach(key => {
                     const sensor = data[key];
-                    const time = sensor.time;
+                    const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
                     const temperature = sensor.temperature;
                     const humidity = sensor.humidity;
                     const row = `
