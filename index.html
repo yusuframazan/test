@@ -110,7 +110,7 @@
           <li><a href="#" onclick="loadPlantsPage()">Bitkiler</a></li>
           <li><a href="#" onclick="loadAboutPage()">Hakkımızda</a></li>
           <li><a href="#" onclick="loadContactPage()">İletişim</a></li>
-          <li><a href="#" onclick="loadDataHistoryPage()">Veri Geçmişi</a></li>
+          <li><a href="#" onclick="loadDataHistory()">Veri Geçmişi</a></li> <!-- Yeni bağlantı -->
         </ul>
       </nav>
     </div>
@@ -121,7 +121,8 @@
       <h2>Bitki Bilgileri</h2>
       <p>Bitki Adı: <span id="plant-name">---</span></p>
       <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
-      <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
+      <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p> <!-- Güncel sıcaklık alanı -->
+      <p>Nem Oranı: <span id="current-humidity">---</span>%</p> <!-- Güncel nem alanı -->
     </section>
 
     <div class="controls">
@@ -141,13 +142,13 @@
   <script>
     function loadHomePage() {
       document.getElementById("main-content").innerHTML = `
-       <section class="plant-info">
-  <h2>Bitki Bilgileri</h2>
-  <p>Bitki Adı: <span id="plant-name">Papatya</span></p>
-  <p>Toprak Nem: <span id="soil-moisture">50</span>%</p>
-  <p>Hava Sıcaklığı: <span id="current-temperature">25</span>°C</p>
-</section>
-
+        <section class="plant-info">
+          <h2>Bitki Bilgileri</h2>
+          <p>Bitki Adı: <span id="plant-name">---</span></p>
+          <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
+          <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
+          <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
+        </section>
 
         <div class="controls">
           <button onclick="updateSensorData()">Verileri Güncelle</button>
@@ -158,7 +159,6 @@
           <canvas id="sensor-chart"></canvas>
         </div>
       `;
-      updateCurrentTemperature(); // Ana sayfa yüklendiğinde hava sıcaklığını güncelle
     }
 
     function loadPlantsPage() {
@@ -202,46 +202,58 @@
       `;
     }
 
-    function loadDataHistoryPage() {
-      // Bu kısım senör verisi geçmişinin gösterildiği bir sayfa olabilir
-      // Örneğin, AJAX isteği kullanarak sunucudan tüm ölçülen sensör verilerini çekebilir ve HTML içeriğini oluşturabilirsiniz.
-      // Bu verileri tablo veya grafik şeklinde gösterebilirsiniz
-      fetch('sunucu_adresi/veri_gecmisi')
+    function loadDataHistory() {
+      // Sensör verilerinin tüm geçmişini yükle ve göster
+      fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
         .then(response => response.json())
         .then(data => {
-          const sensorDataHistory = document.getElementById('sensor-data-history');
-          data.forEach(sensor => {
-            const row = `
+          // Verileri tablo halinde oluştur
+          let tableHTML = `<h2>Veri Geçmişi</h2>
+                           <table>
+                             <thead>
+                               <tr>
+                                 <th>Zaman</th>
+                                 <th>Sıcaklık (°C)</th>
+                                 <th>Nem (%)</th>
+                               </tr>
+                             </thead>
+                             <tbody>`;
+          // Tüm sensör verilerini döngüyle tabloya ekle
+          Object.keys(data).forEach(key => {
+            const sensor = data[key];
+            const time = new Date(sensor.time).toLocaleString(); // Tarih ve saat formatını ayarla
+            const temperature = sensor.temperature;
+            const humidity = sensor.humidity;
+            tableHTML += `
               <tr>
-                <td>${sensor.timestamp}</td>
-                <td>${sensor.temperature}</td>
-                <td>${sensor.humidity}</td>
+                <td>${time}</td>
+                <td>${temperature}</td>
+                <td>${humidity}</td>
               </tr>
             `;
-            sensorDataHistory.innerHTML += row;
           });
+          tableHTML += `</tbody></table>`;
+          document.getElementById("main-content").innerHTML = tableHTML;
         })
         .catch(error => console.error('Veri alınamadı:', error));
     }
 
-   function updateSensorData() {
-      // Güncel sensör verilerini burada alabilirsiniz (örneğin AJAX isteğiyle sunucudan)
-      // Örnek olarak sabit değerler kullanıyorum
-      var temperature = 25;
-      var humidity = 50;
+    function updateSensorData() {
+      // Sensör verilerini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
+      // Örneğin, AJAX isteği kullanarak sunucudan yeni verileri çekebilir ve HTML içeriğini güncelleyebilirsiniz.
+      fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+        .then(response => response.json())
+        .then(data => {
+          // En son ölçümü al
+          const latestReading = data[Object.keys(data).pop()];
+          // Güncel sıcaklık ve nem değerlerini güncelle
+          document.getElementById('current-temperature').textContent = latestReading.temperature;
+          document.getElementById('current-humidity').textContent = latestReading.humidity;
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
 
-      // Güncel sensör verilerini HTML içeriğine yerleştirme
-      document.getElementById("current-temperature").textContent = temperature;
-      document.getElementById("soil-moisture").textContent = humidity;
-
-      // Grafik verilerini güncelleme
-      updateChart(temperature);
-    }
-
-    function updateCurrentTemperature() {
-      // Hava sıcaklığı verisini güncellemek için burada gerekli JavaScript kodunu ekleyebilirsiniz.
-      // Örneğin, AJAX isteği kullanarak sunucudan güncel hava sıcaklığı verisini çekebilir ve HTML içeriğini güncelleyebilirsiniz.
-      document.getElementById("current-temperature").textContent = "25"; // Örnek veri, gerçek veriyle değiştirilecek
+      // Grafik verilerini güncelle
+      updateChart();
     }
 
     function updateChart() {
