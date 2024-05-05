@@ -3,28 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anlık Sıcaklık ve Nem</title>
+    <title>Sensör Verileri</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Anlık Sıcaklık ve Nem</h1>
-    <div id="temperature"></div>
-    <div id="humidity"></div>
+    <h1>Sensör Verileri</h1>
+    <table id="sensorData">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Sıcaklık (°C)</th>
+                <th>Nem (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Buraya JavaScript koduyla veriler eklenecek -->
+        </tbody>
+    </table>
 
-    <a href="history.html">Sensör Geçmişleri</a>
-
-    <script src="data.js"></script>
     <script>
-        // Veriyi çek ve göster
-        setInterval(function () {
-            fetch('data.js')
-                .then(response => response.json())
-                .then(data => {
-                    const latestData = data[data.length - 1];
-                    document.getElementById('temperature').innerHTML = `Sıcaklık: ${latestData.temperature} °C`;
-                    document.getElementById('humidity').innerHTML = `Nem: ${latestData.humidity} %`;
-                })
-                .catch(error => console.error('Hata:', error));
-        }, 5000); // 5 saniyede bir güncelle
+        // Verileri Firebase'den çek ve tabloya ekle
+        fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+            .then(response => response.json())
+            .then(data => {
+                const sensorData = document.getElementById('sensorData');
+                Object.keys(data).forEach(key => {
+                    const sensor = data[key];
+                    const timestamp = new Date(parseInt(key));
+                    const temperature = sensor.temperature;
+                    const humidity = sensor.humidity;
+                    const row = `
+                        <tr>
+                            <td>${timestamp}</td>
+                            <td>${temperature}</td>
+                            <td>${humidity}</td>
+                        </tr>
+                    `;
+                    sensorData.innerHTML += row;
+                });
+            })
+            .catch(error => console.error('Veri alınamadı:', error));
     </script>
 </body>
-</html>
+</html> 
