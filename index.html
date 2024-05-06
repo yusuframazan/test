@@ -260,23 +260,27 @@
             .catch(error => console.error('Veri alınamadı:', error));
     }
 
-    function updateSensorData() {
-        fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
-            .then(response => response.json())
-            .then(data => {
-                const latestReading = data[Object.keys(data).pop()];
-                document.getElementById('current-temperature').textContent = latestReading.temperature;
-                document.getElementById('current-humidity').textContent = latestReading.humidity;
-                document.getElementById('soil-moisture').textContent = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
-                document.getElementById('ldr-sensor').textContent = latestReading.ldrSensor || '---'; // Işık şiddeti (LDR sensörü) değeri
+   function updateSensorData() {
+    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+        .then(response => response.json())
+        .then(data => {
+            const latestReading = data[Object.keys(data).pop()];
+            const temperature = latestReading.temperature;
+            const soilMoisture = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
+            const ldrSensor = latestReading.ldrSensor || '---'; // Işık şiddeti (LDR sensörü) değeri
 
-                // Grafik verilerini güncelle
-                updateChart(latestReading.temperature);
-            })
-            .catch(error => console.error('Veri alınamadı:', error));
-    }
+            // Sensör verilerini güncelle
+            document.getElementById('current-temperature').textContent = temperature;
+            document.getElementById('current-humidity').textContent = latestReading.humidity;
+            document.getElementById('soil-moisture').textContent = soilMoisture;
+            document.getElementById('ldr-sensor').textContent = ldrSensor;
 
-  function updateChart(temperature, soilMoisture, ldrSensor) {
+            // Grafik verilerini güncelle
+            updateChart(temperature, soilMoisture, ldrSensor);
+        })
+        .catch(error => console.error('Veri alınamadı:', error));
+}
+function updateChart(temperature, soilMoisture, ldrSensor) {
     var ctx = document.getElementById('sensor-chart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -307,7 +311,6 @@
         }
     });
 }
-
 </script>
 </body>
 </html>
