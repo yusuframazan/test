@@ -139,7 +139,7 @@
         <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
         <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
         <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
-        <p>Işık Şiddeti: <span id="ldr-sensor">---</span></p> <!-- Yeni satır -->
+        <p>Işık Şiddeti: <span id="ldr-sensor">---</span>%</p> <!-- Yeni satır -->
     </section>
 
     <div class="controls">
@@ -165,7 +165,7 @@
           <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
           <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
           <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
-          <p>Işık Şiddeti: <span id="ldr-sensor">---</span></p>
+          <p>Işık Şiddeti: <span id="ldr-sensor">---</span>%</p>
         </section>
 
         <div class="controls">
@@ -260,57 +260,53 @@
             .catch(error => console.error('Veri alınamadı:', error));
     }
 
-   function updateSensorData() {
-    fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
-        .then(response => response.json())
-        .then(data => {
-            const latestReading = data[Object.keys(data).pop()];
-            const temperature = latestReading.temperature;
-            const soilMoisture = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
-            const ldrSensor = latestReading.ldrSensor || '---'; // Işık şiddeti (LDR sensörü) değeri
+    function updateSensorData() {
+        fetch('https://bitki-izleme-default-rtdb.firebaseio.com/sensors.json')
+            .then(response => response.json())
+            .then(data => {
+                const latestReading = data[Object.keys(data).pop()];
+                document.getElementById('current-temperature').textContent = latestReading.temperature;
+                document.getElementById('current-humidity').textContent = latestReading.humidity;
+                document.getElementById('soil-moisture').textContent = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
+                document.getElementById('ldr-sensor').textContent = latestReading.ldrSensor || '---'; // Işık şiddeti (LDR sensörü) değeri
 
-            // Sensör verilerini güncelle
-            document.getElementById('current-temperature').textContent = temperature;
-            document.getElementById('current-humidity').textContent = latestReading.humidity;
-            document.getElementById('soil-moisture').textContent = soilMoisture;
-            document.getElementById('ldr-sensor').textContent = ldrSensor;
+                // Grafik verilerini güncelle
+                updateChart(latestReading.temperature, latestReading.soilMoisture, latestReading.ldrSensor);
+            })
+            .catch(error => console.error('Veri alınamadı:', error));
+    }
 
-            // Grafik verilerini güncelle
-            updateChart(temperature, soilMoisture, ldrSensor);
-        })
-        .catch(error => console.error('Veri alınamadı:', error));
-}
-function updateChart(temperature, soilMoisture, ldrSensor) {
-    var ctx = document.getElementById('sensor-chart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Sıcaklık', 'Toprak Nem', 'Işık Şiddeti'],
-            datasets: [{
-                label: 'Değerler',
-                data: [temperature, soilMoisture, ldrSensor],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }       
-        }
-    });
-}
+    function updateChart(temperature, soilMoisture, ldrSensor) {
+        var ctx = document.getElementById('sensor-chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Sıcaklık', 'Toprak Nem', 'Işık Şiddeti'],
+                datasets: [{
+                    label: 'Değerler',
+                    data: [temperature, soilMoisture, ldrSensor],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }       
+            }
+        });
+    }
 </script>
 </body>
 </html>
