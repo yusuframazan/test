@@ -137,8 +137,9 @@
         <h2>Bitki Bilgileri</h2>
         <p>Bitki Adı: <span id="plant-name">---</span></p>
         <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
-        <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p> <!-- Güncel sıcaklık alanı -->
-        <p>Nem Oranı: <span id="current-humidity">---</span>%</p> <!-- Güncel nem alanı -->
+        <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
+        <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
+        <p>Işık Şiddeti: <span id="ldr-sensor">---</span></p> <!-- Yeni satır -->
     </section>
 
     <div class="controls">
@@ -164,6 +165,7 @@
           <p>Toprak Nem: <span id="soil-moisture">---</span>%</p>
           <p>Hava Sıcaklığı: <span id="current-temperature">---</span>°C</p>
           <p>Nem Oranı: <span id="current-humidity">---</span>%</p>
+          <p>Işık Şiddeti: <span id="ldr-sensor">---</span></p>
         </section>
 
         <div class="controls">
@@ -230,6 +232,8 @@
                             <th>Zaman</th>
                             <th>Sıcaklık (°C)</th>
                             <th>Nem (%)</th>
+                            <th>Toprak Nem Sensörü (%)</th> <!-- Yeni sütun -->
+                            <th>Işık Şiddeti</th> <!-- Yeni sütun -->
                         </tr>
                     </thead>
                     <tbody>`;
@@ -238,11 +242,15 @@
                     const time = new Date(sensor.time).toLocaleString();
                     const temperature = sensor.temperature;
                     const humidity = sensor.humidity;
+                    const soilMoisture = sensor.soilMoisture || '---'; // Toprak nem sensörü değeri
+                    const ldrSensor = sensor.ldrSensor || '---'; // LDR sensörü değeri
                     tableHTML += `
                     <tr>
                         <td>${time}</td>
                         <td>${temperature}</td>
                         <td>${humidity}</td>
+                        <td>${soilMoisture}</td>
+                        <td>${ldrSensor}</td>
                     </tr>
                 `;
                 });
@@ -259,6 +267,8 @@
                 const latestReading = data[Object.keys(data).pop()];
                 document.getElementById('current-temperature').textContent = latestReading.temperature;
                 document.getElementById('current-humidity').textContent = latestReading.humidity;
+                document.getElementById('soil-moisture').textContent = latestReading.soilMoisture || '---'; // Toprak nem sensörü değeri
+                document.getElementById('ldr-sensor').textContent = latestReading.ldrSensor || '---'; // Işık şiddeti (LDR sensörü) değeri
 
                 // Grafik verilerini güncelle
                 updateChart(latestReading.temperature);
@@ -266,33 +276,38 @@
             .catch(error => console.error('Veri alınamadı:', error));
     }
 
-    function updateChart(temperature) {
-        var ctx = document.getElementById('sensor-chart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Sıcaklık'],
-                datasets: [{
-                    label: 'Sıcaklık (°C)',
-                    data: [temperature],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+  function updateChart(temperature, soilMoisture, ldrSensor) {
+    var ctx = document.getElementById('sensor-chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Sıcaklık', 'Toprak Nem', 'Işık Şiddeti'],
+            datasets: [{
+                label: 'Değerler',
+                data: [temperature, soilMoisture, ldrSensor],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
-            }
-        });
-    }
+            }       
+        }
+    });
+}
+
 </script>
 </body>
 </html>
